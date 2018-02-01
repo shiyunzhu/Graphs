@@ -50,6 +50,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <set>
 
 void buildMSTPrim(Graph g, GraphApp *app);
 void buildMSTKruskal(Graph g, GraphApp *app);
@@ -69,28 +70,41 @@ void GraphApp::generate_nodes() {
 
 void GraphApp::generate_edges() {
     srand(time(nullptr));
-
-    for (int i = 0; i < NEDGES; i++) {
-        // make sure graph is connected.
-        if (i < NPOINTS) {
-            Node *a = (nodes[i]);
-            Node *b = (nodes[rand() % NPOINTS]);
-            double w = a->distance(*b);
-            if (w == 0)
-                continue;
-            edges.push_back(new Edge(i, a, b, w));
-            a->edges.push_back(b);
-            b->edges.push_back(a);
-        } else {
-            Node *a = (nodes[rand() % NPOINTS]);
-            Node *b = (nodes[rand() % NPOINTS]);
-            double w = a->distance(*b);
-            if (w == 0)
-                continue;
-            edges.push_back(new Edge(i, a, b, w));
-            a->edges.push_back(b);
-            b->edges.push_back(a);
-        }
+    
+    set<int> nodesIn;
+    set<int> nodesOut;
+    
+    nodesIn.insert(0);
+    for (int i = 1; i < NPOINTS; i++) {
+		nodesOut.insert(i);
+	}
+	int a = 0, i = 0;
+	while (!nodesOut.empty()) {
+		int set_ind = rand() % nodesOut.size();
+		set<int>::iterator it = nodesOut.begin();
+		advance(it, set_ind);
+		int b = *it;
+		
+		double w = nodes[a]->distance(*nodes[b]);
+		edges.push_back(new Edge(i, nodes[a], nodes[b], w));
+		nodes[a]->edges.push_back(nodes[b]);
+		nodes[b]->edges.push_back(nodes[a]);
+		nodesIn.insert(b);
+		nodesOut.erase(b);
+		a = b;
+		i++;
+	}
+	 
+    while (i < NEDGES) {
+        Node *a = (nodes[rand() % NPOINTS]);
+        Node *b = (nodes[rand() % NPOINTS]);
+        double w = a->distance(*b);
+        if (w == 0)
+            continue;
+        edges.push_back(new Edge(i, a, b, w));
+        a->edges.push_back(b);
+        b->edges.push_back(a);
+        i++;
     }
 }
 
