@@ -327,7 +327,6 @@ void GraphApp::clean() {
  * @param number    specifies which graph to load
  */
 void GraphApp::makeGraphs(int number) {
-    clean();
 
     // 5x5 grid
     if (number == 0) {
@@ -338,12 +337,13 @@ void GraphApp::makeGraphs(int number) {
                 c++;
             }
         }
+        c = 0;
         for (uint i = 0; i < nodes.size() - 1; ++i) {
             if (i < nodes.size() - 5) {
                 Node *a = (nodes[i]);
                 Node *b = (nodes[i + 5]);
                 double w = a->distance(*b);
-                edges.push_back(new Edge(i, a, b, w));
+                edges.push_back(new Edge(c++, a, b, w));
                 a->edges.push_back(b);
                 b->edges.push_back(a);
             }
@@ -351,7 +351,7 @@ void GraphApp::makeGraphs(int number) {
                 Node *a = (nodes[i]);
                 Node *b = (nodes[i + 1]);
                 double w = a->distance(*b);
-                edges.push_back(new Edge(i, a, b, w));
+                edges.push_back(new Edge(c++, a, b, w));
                 a->edges.push_back(b);
                 b->edges.push_back(a);
             }
@@ -366,12 +366,13 @@ void GraphApp::makeGraphs(int number) {
                 c++;
             }
         }
+        c = 0;
         for (uint i = 0; i < nodes.size() - 1; ++i) {
             if ((i + 1) % 3 != 0) {
                 Node *a = (nodes[i]);
                 Node *b = (nodes[i + 1]);
                 double w = a->distance(*b);
-                edges.push_back(new Edge(i, a, b, w));
+                edges.push_back(new Edge(c++, a, b, w));
                 a->edges.push_back(b);
                 b->edges.push_back(a);
             }
@@ -379,7 +380,7 @@ void GraphApp::makeGraphs(int number) {
                 Node *a = (nodes[i]);
                 Node *b = (nodes[i + 3]);
                 double w = a->distance(*b);
-                edges.push_back(new Edge(i, a, b, w));
+                edges.push_back(new Edge(c++, a, b, w));
                 a->edges.push_back(b);
                 b->edges.push_back(a);
             }
@@ -401,13 +402,13 @@ void GraphApp::makeGraphs(int number) {
         nodes.push_back(new Node(8, 600, 300));
         nodes.push_back(new Node(9, 600, 400));
         nodes.push_back(new Node(10, 600, 500));
-
+        int c = 0;
         for (uint i = 0; i < nodes.size(); ++i) {
             if (i / 4 == 0) {
                 Node *a = (nodes[i]);
                 Node *b = (nodes[i + 1]);
                 double w = a->distance(*b);
-                edges.push_back(new Edge(i, a, b, w));
+                edges.push_back(new Edge(c++, a, b, w));
                 a->edges.push_back(b);
                 b->edges.push_back(a);
             }
@@ -415,7 +416,7 @@ void GraphApp::makeGraphs(int number) {
                 Node *a = (nodes[i]);
                 Node *b = (nodes[i + 1]);
                 double w = a->distance(*b);
-                edges.push_back(new Edge(i, a, b, w));
+                edges.push_back(new Edge(c++, a, b, w));
                 a->edges.push_back(b);
                 b->edges.push_back(a);
             }
@@ -423,7 +424,7 @@ void GraphApp::makeGraphs(int number) {
                 Node *a = (nodes[i]);
                 Node *b = (nodes[5]);
                 double w = 1;
-                edges.push_back(new Edge(i, a, b, w));
+                edges.push_back(new Edge(c++, a, b, w));
                 a->edges.push_back(b);
                 b->edges.push_back(a);
             }
