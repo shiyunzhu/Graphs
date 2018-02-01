@@ -327,7 +327,7 @@ void GraphApp::clean() {
  * @param number    specifies which graph to load
  */
 void GraphApp::makeGraphs(int number) {
-
+    clean();
     // 5x5 grid
     if (number == 0) {
         int c = 0;
