@@ -51,6 +51,41 @@
  * existing edges for the MST.
  *
  * Add your outline here
+
+Prim(Graph g, GraphApp *app) {
+
+for (all nodes in g) {
+    put in notOnMST
+}
+
+Node *c = first node in graph
+add node to onMST
+remove node from notOnMST
+
+while (notOnMST.size() != 0) {
+    Node *n
+    Node *h
+    low = big number
+	for (all nodes in onMST) {
+		c = current node in onMST
+        for (all edges in c) {
+            tempN = current edge
+            if (distance(tempN, c) < low) {
+                for (all nodes in onMST) {
+                    if (current node in onMST == tempN) alreadyIn = true
+                }
+                if (!alreadyIn) {
+                    n = tempN
+                    h = c
+                    low = distance(tempN, c)
+                }
+            }
+        }
+	}
+    drawEdge(n,h,g.edges,true)
+    add n to onMST
+    remove n from notOnMST
+}
  *
  *
  */
@@ -59,6 +94,51 @@ void buildMSTPrim(Graph g, GraphApp *app) {
     notOnMST.erase(notOnMST.begin(), notOnMST.end());
 
     // Write your code here
+    
+    for (unsigned int i = 0; i < g.nodes.size(); i++) {
+        notOnMST.push_back(g.nodes[i]);
+    }
+    
+    // First node added to the tree
+    Node * c = g.nodes[0];
+    onMST.push_back(c);
+	notOnMST.erase(notOnMST.begin(), notOnMST.begin() + 1);
+
+    // While the MST doesn't include all of the nodes
+    while (notOnMST.size() > 0) {
+		Node *n;
+		Node *h;
+		double low = 99999999;
+
+        // for all nodes in onMST find all possible other nodes to connect with
+        for (unsigned int i = 0; i < onMST.size(); i++) {
+            c = onMST[i];
+            for (unsigned int j = 0; j < c->edges.size(); j++) {
+                Node * tempN = c->edges[j];
+                bool alreadyin = false;
+                if (c->distance(*tempN) < low) {
+                    for (unsigned int k = 0; k < onMST.size(); k++) {
+                       if (onMST[k]->id == tempN->id) {
+                            alreadyin = true;
+                        }
+         			}
+                	if (!alreadyin) {
+                    	n = tempN;
+						h = c;
+                    	low = c->distance(*tempN);
+                	}
+				}	
+            }
+        }
+        onMST.push_back(n);
+		for(int j = 0; (unsigned) j < notOnMST.size(); j++)
+			if(notOnMST[j]->id == n->id){
+				notOnMST.erase(notOnMST.begin() + j, notOnMST.begin() + j + 1);
+				break;
+			}
+        drawEdge(n, h, g.edges, app, true);
+    }
+
 }
 
 /**
@@ -144,12 +224,115 @@ void buildMSTKruskal(Graph g, GraphApp *app) {
  *				to the MST, you can use the provided drawEdge function in
  *				GraphAlgorithms.cpp
  *
- * Add your outline here
+ * findShortestPath(start, end, graph g, app) {
+ *     Q.erase(Q.begin(),Q.end())
+ *     source = g[start]
+ *     goal = g[end]
+ *     source.distance = 0
+ *     source.previous = nothing
+ *     
+ *     
+ *     for (all the nodes in g) {
+ *         if (node is not source) {
+ *             node.distance = INFINITY
+ *             node.previous = nothing
+ *         }
+ *         add node to vector Q //not yet visited nodes
+ *     }
+ *     
+ *     node * u
+ *
+ *     while(u != goal) {
+ *         low = Q[0].distance
+ *         u = Q[0]
+ *         ind = 0
+ *         for (all nodes in Q) {
+ *             if (node.distance < low) {
+ *                 low = node.distance
+ *                 u = node
+ *                 ind = i
+ *             }
+ *         }
+ *         remove u from Q
+ *         
+ *         for (all nodes in edges of U) {
+ *             tempD = u.distance + distance(u,node)
+ *             if (tempD < node.distance) {
+ *                 node.distance = tempD
+ *                 node.previous = u
+ *             }
+ *         }
+ *      }
+ *
+ *      previous = u.previous
+ *      while (goal != source) {
+ *           drawEdge(previous, u, g.edges, False)
+ *           u = previous
+ *           previous = u.previous
+ *      }
+ *      drawEdge(previous, u, g.edges, False)
+ * }               
  *
  *
  */
 void findShortestPath(int start, int end, Graph g, GraphApp *app) {
-    // Write code here
+    // erase Q
+    Q.erase(Q.begin(), Q.end());
+    
+
+    // set source and goal
+    Node * source = g.nodes[start];
+    Node * goal = g.nodes[end];
+    source->distance_to_start = 0;
+    source->previous = nullptr;
+
+    // initialize Q
+    for (unsigned int i = 0; i < g.nodes.size(); i++) {
+        if (g.nodes[i]->id != source->id) {
+            g.nodes[i]->distance_to_start = 999999;
+            g.nodes[i]->previous = nullptr;
+        }
+        Q.push_back(g.nodes[i]);
+    }
+    
+    // algorithm
+    Node * u = nullptr;
+    
+    while(u != goal) {
+        double low = Q[0]->distance_to_start;
+        u = Q[0];
+        int ind = 0;
+        
+        // find the closest node in Q
+        for (unsigned int i = 0; i < Q.size(); i++) {
+            if (Q[i]->distance_to_start < low) {
+                low = Q[i]->distance_to_start;
+                u = Q[i];
+                ind = i;
+            }
+        }
+        Q.erase(Q.begin() + ind, Q.begin() + 1 + ind);
+        
+        // check and update neighbouring nodes' path lengths
+        for (unsigned int i = 0; i < u->edges.size(); i++) {
+            double tempD = u->distance_to_start + u->distance(*(u->edges[i]));   
+            if (tempD < u->edges[i]->distance_to_start) {
+                u->edges[i]->distance_to_start = tempD;
+                u->edges[i]->previous = u;
+            }
+        }
+    }
+
+    // trace back path from goal
+    Node * previous = u->previous;
+    while(u->id != source->id) {
+        drawEdge(previous, u, g.edges, app, false);
+        u = previous;
+        previous = u->previous;
+    }
+    drawEdge(previous, u, g.edges, app, false);   
+    
+    
 }
 
 /**

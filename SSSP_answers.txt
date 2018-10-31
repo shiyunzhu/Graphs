@@ -1,0 +1,12 @@
+First, let's start off looking just at the source node. If we're trying to minimize the path length, which neighbor does it make the most sense to investigate first?
+
+It would make sense to look at the node with the shortest path length to the source code since we are looking for the shortest path. It may, more likely be in the shortest path.
+
+Now we have shortest paths to two nodes (or eventually three nodes, or eventually N nodes). Notice that, at least in the two-nodes case, both of these paths are shortest paths: one of them is trivial, and the other may be proven minimal by contradiction. If we're trying to minimize the path length to the goal - which we have not yet found using our algorithm - which node does it make the most sense to investigate at each further step? What else should we be doing at each step, if anything, to ensure that we'll end with a result that makes sense? Why does doing this end up yielding a shortest path to another node? (Does it?)
+
+We want to investigate the node in the list of nodes that haven't been visited yet with the least distance from the source node. This node would have the shortest path so far, from the source node. Then, we would look at its neighbouring nodes, and if the distance from it to its neighbouring node plus the distance from it to the source node is less than the current distance from the neighbouring node to the source node, update that distance. This would ensure that the distances are always the shortest path since before, the path is longer. Also make sure the update the neighbours whose distances are updated such that the previous node pointer is now the node we are investigating. Be sure to remove this investigated node from the nodes not yet visited. 
+
+Suppose we've done many iterations and have now found our goal. How do we know that we're done? How can we now derive the path we want?
+
+Since the node chosen to investigate next is always the unvisited node with the shortest path length to the source node, if the goal is that node, then there is no other path which is shorter to the goal node. Every other path will be longer since the next shortest path would probably be even longer in order to get to the goal. To derive the path, we trace back using the pointer to the previous node to get that short path stored in the nodes.
+

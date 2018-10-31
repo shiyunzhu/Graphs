@@ -1,0 +1,21 @@
+Minimum Spanning Tree
+
+What are the three most essential properties of a MST?
+
+1) It is a tree connecting all the vertices in a graph
+2) using only a subset of all the edges of the graph
+3) where the sum of the edge weights are the minimum
+
+Suppose we start off only with one node in our candidate tree. For the next step, we should pick an adjacent node and its edge to add to the tree. Which should we pick? Justify your answer.
+
+We would pick the one whose edge weight is the lowest since we want the minimum span, aka the lowest sum of all the edge weights.
+
+Now we have two (or three, or N) nodes in our candidate tree. Which nodes and edges should we pick at each subsequent step, and why? How do we know when we're finished, and why? (In the literature, this method is known as Prim's algorithm.)
+
+At each subsequent step, search through the adjacent nodes (not already in the tree) of the values in the candidate tree and add the node whose edge connecting it to the tree is the least. We would know that we are finished when there are no nodes not in the tree (all adjacent nodes of the tree are in the tree).
+
+Let's look at a different algorithm. Suppose that we instead start off with a lot of candidate trees - one per node, in fact. We can join trees at will by picking edges. Which edge should we pick at each step? When do we stop? Justify your answers. (In the literature, this method is known as Kruskal's algorithm.)
+
+Pick the edges that connect trees which have a minimum weight. Then, repeat this process until we have only one tree (with all of the nodes).
+
+

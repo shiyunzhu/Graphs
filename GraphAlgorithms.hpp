@@ -37,6 +37,9 @@ void drawEdge(Node *pt1, Node *pt2, vector<Edge *> edges, GraphApp *app,
 vector<Node *> onMST;
 vector<Node *> notOnMST;
 
+/** Vector to store Nodes not yet visited */
+vector<Node *> Q;
+
 /**
  * @brief Struct representing an edge between two trees during computation of
  * 			MST using Kruskal's algorithm.
